@@ -1,0 +1,75 @@
+This is my Numerology app Codex Prompt: You are working in `d:\W\numerology-app`, a full-stack Numerology App.
+
+
+
+Completed so far:
+
+
+
+Frontend:
+- React 18 app using Webpack, Babel, Bootstrap, Reactstrap, React Router, Axios, and Recharts.
+- Protected app routes with auth context:
+  - `/login`
+  - `/register`
+  - `/dashboard`
+  - `/calculator`
+  - `/forecast`
+  - `/compatibility`
+  - `/loshu`
+- Responsive SaaS-style layout with `AppLayout`, `AuthLayout`, reusable `StatCard`, `AlertMessage`, and `NameCorrectionScoreChart`.
+- Auth flow stores JWT/user state and redirects public/protected routes appropriately.
+- Calculator page creates numerology profiles using full name and DOB.
+- Name correction scoring is integrated with live/debounced score refresh and Recharts visualization.
+- DOB persistence is handled through user profile/local helpers so pages can auto-fill saved DOB.
+- Lo Shu Grid page performs live DOB analysis, renders a 3x3 grid, highlights missing/repeated/present numbers, and shows strengths, weaknesses, interpretation, remedies, lifestyle guidance, behavioral suggestions, and affirmations.
+- Forecast and compatibility pages are already present and wired to backend APIs.
+- Frontend env expects `REACT_APP_API_URL=http://localhost:3000`.
+
+
+
+Backend:
+- Express backend with MongoDB Atlas via Mongoose.
+- Security/logging middleware: `helmet`, `cors`, `morgan`, JSON parsing.
+- Auth endpoints:
+  - `POST /auth/register`
+  - `POST /auth/login`
+- Numerology endpoints protected by JWT:
+  - `POST /numerology/profile`
+  - `POST /numerology/forecast`
+  - `POST /numerology/compatibility`
+  - `POST /numerology/loshu`
+  - `POST /numerology/name-score`
+- User model includes name, email, hashed password, saved `dateOfBirth`, saved numerology profile, and last 10 calculations.
+- Numerology engine supports psychic number, destiny number, name number, profile interpretation, lucky colors/days, forecast, compatibility, and name correction suggestions.
+- Lo Shu engine supports grid generation, missing/repeated number analysis, strengths, weaknesses, interpretation, and remedies.
+- Backend env expects `MONGO_URI`, `JWT_SECRET`, `PORT`, and frontend origin config.
+
+
+
+Project scripts:
+- Frontend:
+  - `npm start`
+  - `npm run build`
+- Backend:
+  - `cd backend`
+  - `npm start`
+  - `npm run dev`
+
+
+
+Important constraints:
+- Keep the existing React/Reactstrap/Bootstrap style.
+- Keep backend APIs compatible with current frontend service calls.
+- Do not remove DOB persistence behavior.
+- Do not expose secrets from `.env`.
+- Avoid broad refactors unless needed.
+- If adding features, update README/API notes and keep validation/error messages user-friendly.
+
+
+
+Next likely tasks:
+- Improve polish and responsiveness.
+- Add tests for numerology and Lo Shu engines.
+- Add profile/history views from `lastCalculations`.
+- Harden auth/session handling.
+- Add deployment docs or production config.

@@ -1,0 +1,379 @@
+You are working in `d:\W\numerology-app`, an existing full-stack Numerology SaaS app.
+
+Build a new protected feature called:
+
+Clean Trade Dashboard / Clean Trade Engine
+
+Important:
+- Keep the existing app working exactly as-is.
+- Do not break existing auth, numerology, Lo Shu, dashboard, calculator, forecast, or compatibility pages.
+- Use the current tech stack and project style.
+- Prefer modular backend engine files.
+- Use existing JWT auth middleware for the new API.
+- Use existing React/Reactstrap/Bootstrap styling patterns.
+- Do not expose secrets.
+- Update README when done.
+
+Existing stack:
+- Frontend: React 18, Webpack 5, Babel, React Router DOM v6, Axios, Bootstrap 5, Reactstrap, Recharts
+- Backend: Node.js, Express 4, MongoDB Atlas, Mongoose, JWT auth, bcryptjs, dotenv, helmet, cors, morgan
+
+Existing structure:
+- Frontend source: `src/`
+- Pages: `src/pages/`
+- API client: `src/services/api.js`
+- Routes: `src/App.jsx`
+- Layout nav: `src/components/AppLayout.jsx`
+- Backend source: `backend/src/`
+- Backend app setup: `backend/src/app.js`
+- Backend routes: `backend/src/routes/`
+- Backend controllers: `backend/src/controllers/`
+- Backend engines: `backend/src/engine/`
+
+Goal:
+Add a new protected page and backend API for trading-time intelligence using astrology-style timing rules.
+
+Feature name:
+Clean Trade Engine
+
+Frontend route:
+`/clean-trade`
+
+Frontend page:
+`src/pages/CleanTrade.jsx`
+
+Backend API:
+`POST /trade/clean-analysis`
+
+The route must require JWT auth.
+
+Do not present this as financial advice. Add concise UI/API wording where appropriate that results are timing intelligence only, not investment advice.
+
+Backend Requirements:
+
+1. Add route module
+Create:
+- `backend/src/routes/tradeRoutes.js`
+
+Register it in:
+- `backend/src/app.js`
+
+Route:
+- `POST /trade/clean-analysis`
+
+Use existing auth middleware.
+
+2. Add controller
+Create:
+- `backend/src/controllers/tradeController.js`
+
+Controller should:
+- Validate input
+- Call the trade engine
+- Return strict JSON shape
+- Return errors as `{ message: string }`
+
+3. Add engine
+Create:
+- `backend/src/engine/cleanTradeEngine.js`
+
+The engine must be modular and include functions for:
+- location resolution
+- sunrise/sunset calculation
+- Choghadiya generation
+- Rahu Kaal calculation
+- Vaar Vela / Kaal Vela / Kaal Ratri risk marking
+- optional ascendant weighting
+- optional asset context
+- final summary generation
+
+4. Input format
+API accepts:
+
+```json
+{
+  "targetDate": "YYYY-MM-DD",
+  "location": "Cumming, Georgia, USA",
+  "asset": "AVGO",
+  "ascendant": "Leo"
+}
+```
+
+Required:
+- `targetDate`
+
+Optional:
+- `location`
+  - default: `Cumming, Georgia, USA`
+- `asset`
+  - examples: `AVGO`, `TSLA`, `HOOD`
+- `ascendant`
+  - examples: `Aries`, `Taurus`, `Gemini`, `Cancer`, `Leo`, `Virgo`, `Libra`, `Scorpio`, `Sagittarius`, `Capricorn`, `Aquarius`, `Pisces`
+
+5. Location and sunrise/sunset
+- Always compute timing windows from sunrise to sunset.
+- If exact geocoding is not already available, implement a safe internal location resolver with default coordinates for Cumming, Georgia, USA.
+- Do not use hardcoded time blocks.
+- The fallback location should be:
+  - Cumming, Georgia, USA
+  - Approx coordinates: latitude `34.2073`, longitude `-84.1402`
+  - Timezone: `America/New_York`
+- If no external API/key exists, use deterministic local calculation or a lightweight astronomy library if already practical within the project.
+- Do not introduce paid API dependencies.
+
+6. Choghadiya generation
+- Divide daylight duration into 8 equal segments:
+  - sunrise to sunset
+- Generate 8 time blocks.
+- Assign Choghadiya types using weekday-based rotation.
+- Supported types:
+  - Amrit
+  - Shubh
+  - Labh
+  - Char
+  - Rog
+  - Kaal
+  - Udveg
+
+Use a deterministic weekday sequence table. Keep it in the engine as data/config.
+
+7. Rahu Kaal filter
+- Calculate Rahu Kaal based on weekday daylight segment rules.
+- Mark overlapping rows as:
+  - action: `AVOID`
+  - risk: `HIGH`
+- Include Rahu Kaal in `riskEngine.rahuKaal`.
+- Rahu Kaal should override BUY signals.
+
+8. Vela filters
+Implement risk marking for:
+- Vaar Vela
+- Kaal Vela
+- Kaal Ratri
+
+If exact traditional calculation is simplified, keep the logic deterministic and document it in code comments briefly.
+
+These filters must override normal Choghadiya signals:
+- action: `AVOID`
+- risk: `HIGH`
+- notes should mention the risk reason.
+
+9. Ascendant filter
+Use ascendant in this priority order:
+- If the user selects or enters an ascendant in the Clean Trade form, use that value.
+- If no ascendant is entered on the form but the authenticated user profile has an ascendant saved, use the saved profile ascendant.
+- If no ascendant is available anywhere, skip all ascendant/Lagna logic completely.
+
+Use the English zodiac sign name for ascendant values:
+- Aries
+- Taurus
+- Gemini
+- Cancer
+- Leo
+- Virgo
+- Libra
+- Scorpio
+- Sagittarius
+- Capricorn
+- Aquarius
+- Pisces
+
+If provided:
+- Adjust BUY/SELL/HOLD scoring based on ascendant benefic/malefic weighting.
+- Add explanation to `ascendantInsights`.
+
+If missing:
+- Skip all ascendant logic completely.
+- Return `ascendantInsights` as an empty string or clear neutral message.
+
+10. Asset engine
+Only apply if `asset` is provided.
+
+Since no market data provider is configured yet:
+- Implement mock deterministic asset analysis based on the asset symbol.
+- Do not call external market APIs unless existing infrastructure is already present.
+- Return:
+  - asset
+  - support
+  - resistance
+  - trendBias
+  - volatility estimate if useful internally
+
+If asset is missing:
+- Return empty/default `assetAnalysis`.
+- Strategy should remain timing-based only.
+
+11. Output format
+Return this strict JSON shape:
+
+```json
+{
+  "input": {
+    "targetDate": "",
+    "location": "",
+    "asset": "",
+    "ascendant": ""
+  },
+  "summary": {
+    "bestBuyWindow": "",
+    "bestExitWindow": "",
+    "highestRiskWindow": ""
+  },
+  "choghadiyaTable": [
+    {
+      "timeBlock": "",
+      "type": "",
+      "action": "BUY",
+      "risk": "LOW",
+      "notes": ""
+    }
+  ],
+  "assetAnalysis": {
+    "asset": "",
+    "support": "",
+    "resistance": "",
+    "trendBias": ""
+  },
+  "ascendantInsights": "",
+  "riskEngine": {
+    "rahuKaal": "",
+    "highRiskZones": [],
+    "safeZones": []
+  }
+}
+```
+
+Allowed values:
+- action: `BUY`, `SELL`, `AVOID`, `HOLD`
+- risk: `LOW`, `MEDIUM`, `HIGH`
+
+Frontend Requirements:
+
+1. API client
+Update:
+- `src/services/api.js`
+
+Add method:
+- `cleanTradeAnalysis(payload)`
+
+It should call:
+- `POST /trade/clean-analysis`
+
+2. Add page
+Create:
+- `src/pages/CleanTrade.jsx`
+
+Route:
+- `/clean-trade`
+
+Add protected route in:
+- `src/App.jsx`
+
+Add nav item in:
+- `src/components/AppLayout.jsx`
+
+Label:
+- `Clean Trade`
+
+3. UI sections
+Build the page using Reactstrap/Bootstrap and existing app CSS patterns.
+
+Sections:
+
+Input Panel:
+- Date picker for `targetDate`
+  - default to today's date
+- Location input
+  - default value: `Cumming, Georgia, USA`
+- Asset input optional
+  - placeholder examples: `AVGO`, `TSLA`, `HOOD`
+- Ascendant dropdown optional
+  - include blank option
+  - include all 12 zodiac signs
+  - if the authenticated user profile has an ascendant value, preselect it
+- Submit button
+- Loading state
+- Error state
+
+Summary Cards:
+- Best Buy Window
+  - green styling
+- Best Exit Window
+  - red or rose styling
+- Highest Risk Window
+  - dark/yellow warning styling
+
+Timeline Table:
+- Render `choghadiyaTable`
+- Columns:
+  - Time Block
+  - Choghadiya
+  - Action
+  - Risk
+  - Notes
+- Highlight:
+  - HIGH risk rows in red/warning style
+  - BUY rows in green style
+  - SELL rows in red/rose style
+  - HOLD rows neutral
+
+Asset Panel:
+- Only show meaningful asset details when asset exists.
+- Show support, resistance, trend bias.
+
+Risk Panel:
+- Show Rahu Kaal
+- Show high risk zones
+- Show safe zones
+- Show Vela warnings if present in notes/risk zones.
+
+Ascendant Panel:
+- Show only if ascendant exists and insights are returned.
+
+4. UX behavior
+- On first page load, automatically run the analysis using the best available defaults:
+  - targetDate: today's date
+  - location: user-provided/saved location if available, otherwise `Cumming, Georgia, USA`
+  - ascendant: selected form value if present, otherwise saved profile ascendant if available, otherwise blank
+  - asset: blank unless the user enters one
+- Show the default analysis immediately after the first API call completes.
+- Keep all input fields editable so the user can adjust date, location, asset, or ascendant.
+- Keep the Run Analysis button so the user can manually rerun analysis after changing criteria.
+- Run manual analysis on form submit.
+- Prevent duplicate submissions and avoid overlapping auto/manual requests.
+- Use loading spinner/text during API call.
+- Show a useful initializing/loading state before the first default analysis completes.
+- If the default analysis fails, show the form with an error and allow manual retry.
+- Keep mobile responsive.
+- Keep current visual design consistent.
+- Do not create a marketing landing page.
+
+5. Styling
+Use existing `panel-card`, page header, stat/card conventions where possible.
+Add CSS to `src/styles/app.css` only if needed.
+
+README updates:
+- Add backend endpoint:
+  - `POST /trade/clean-analysis`
+- Add frontend route:
+  - `/clean-trade`
+- Mention route requires authentication.
+- Mention asset analysis is deterministic/mock unless a real market data provider is configured.
+- Mention Clean Trade output is informational timing intelligence, not financial advice.
+
+Acceptance Criteria:
+- Existing app still runs.
+- Existing routes still work.
+- New `/clean-trade` page is protected.
+- New nav item appears in app layout.
+- Opening `/clean-trade` automatically runs a default analysis from available information.
+- Submitting adjusted criteria manually returns a refreshed full clean trade analysis.
+- Location defaults to Cumming, Georgia, USA.
+- Choghadiya rows are generated from sunrise/sunset daylight duration.
+- Rahu Kaal and Vela risks override BUY signals.
+- Ascendant logic runs when an ascendant is selected or available from the user profile.
+- Ascendant logic is skipped when no ascendant is available.
+- Asset analysis only appears when asset is provided.
+- API returns the strict output shape.
+- Frontend renders summary cards, table, asset panel, risk panel, and ascendant insights.
+- README is updated.
