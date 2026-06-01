@@ -34,6 +34,8 @@ The frontend runs at `http://localhost:8080` and uses `REACT_APP_API_URL=http://
 
 - `POST /auth/register`
 - `POST /auth/login`
+- `POST /auth/forgot-password`
+- `POST /auth/reset-password`
 - `GET /auth/me`
 - `PATCH /users/me`
 - `POST /numerology/profile`
@@ -49,12 +51,14 @@ The frontend runs at `http://localhost:8080` and uses `REACT_APP_API_URL=http://
 
 `POST /trade/clean-analysis` powers the Clean Trade Engine. It returns informational timing intelligence from sunrise/sunset Choghadiya, Rahu Kaal, deterministic Vela overlays, optional ascendant weighting, and optional asset context. It is not investment, trading, tax, or financial advice. Asset analysis attempts live Yahoo Finance chart data for current price, support, resistance, and trend, then falls back to deterministic/mock analysis if live data is unavailable.
 
-The `/clean-trade` page runs a default analysis on load using today's date, saved birth location/ascendant when available, and the Cumming, Georgia fallback otherwise.
+The `/clean-trade` page runs a default analysis on load using today's date, saved birth location/ascendant when available, and the Cumming, Georgia fallback otherwise. Manual Clean Trade runs are saved to calculation history; the automatic default analysis is not.
 
 ## Frontend Routes
 
 - `/login`
 - `/register`
+- `/forgot-password`
+- `/reset-password/:token`
 - `/dashboard`
 - `/calculator`
 - `/forecast`

@@ -204,7 +204,8 @@ export default function CleanTrade() {
         targetDate: nextForm.targetDate,
         location: nextForm.location || 'Cumming, Georgia, USA',
         asset: nextForm.asset.trim() || undefined,
-        ascendant: nextForm.ascendant || savedAscendant || undefined
+        ascendant: nextForm.ascendant || savedAscendant || undefined,
+        saveHistory: !auto
       };
       const data = await api.cleanTradeAnalysis(payload);
 

@@ -1,0 +1,139 @@
+AstroNumerix Dev and Production Build Steps
+
+Overview
+This project has two parts:
+- Frontend: React/Webpack app in the repository root.
+- Backend: Express/MongoDB API in the backend folder.
+
+
+Local Development
+
+1. Start the backend API
+
+   cd backend
+   npm run dev
+
+   This runs the backend with nodemon, so it restarts automatically when backend files change.
+   The backend runs at:
+
+   http://localhost:3000
+
+2. Start the frontend app
+
+   From the repository root:
+
+   npm start
+
+   This runs the Webpack development server.
+   The frontend runs at:
+
+   http://localhost:8080
+
+3. Frontend development environment
+
+   In the root .env file, use:
+
+   REACT_APP_API_URL=http://localhost:3000
+
+   The frontend uses this value when calling the backend API.
+
+4. Backend development environment
+
+   In backend/.env, use local/development values such as:
+
+   NODE_ENV=development
+   PORT=3000
+   MONGO_URI=<your MongoDB Atlas URI>
+   JWT_SECRET=<your development JWT secret>
+   JWT_EXPIRES_IN=7d
+   CLIENT_URL=http://localhost:8080
+
+
+Production Build
+
+1. Build the frontend
+
+   From the repository root:
+
+   npm run build
+
+   This creates production frontend files in:
+
+   dist
+
+2. Production frontend environment
+
+   Set the production API URL before building or in the hosting provider environment:
+
+   REACT_APP_API_URL=https://your-backend-url.onrender.com
+
+   Replace the URL with the deployed backend URL.
+
+3. Start the backend in production
+
+   From the backend folder:
+
+   npm start
+
+   This runs:
+
+   node server.js
+
+4. Production backend environment
+
+   Set these environment variables in the backend hosting provider:
+
+   NODE_ENV=production
+   PORT=3000
+   MONGO_URI=<your MongoDB Atlas URI>
+   JWT_SECRET=<strong production JWT secret>
+   JWT_EXPIRES_IN=7d
+   CLIENT_URL=https://your-frontend-url.netlify.app
+
+   CLIENT_URL must match the deployed frontend URL so CORS allows browser requests.
+
+
+Recommended Deployment
+
+Backend on Render
+
+Root directory:
+backend
+
+Build command:
+npm install
+
+Start command:
+npm start
+
+Environment variables:
+NODE_ENV=production
+PORT=3000
+MONGO_URI=<your MongoDB Atlas URI>
+JWT_SECRET=<strong production JWT secret>
+JWT_EXPIRES_IN=7d
+CLIENT_URL=https://your-frontend-url.netlify.app
+
+Health check URL:
+https://your-backend-url.onrender.com/health
+
+
+Frontend on Netlify
+
+Build command:
+npm install && npm run build
+
+Publish directory:
+dist
+
+Environment variable:
+REACT_APP_API_URL=https://your-backend-url.onrender.com
+
+
+Important Notes
+
+- The frontend development server is only for local development.
+- The production frontend is the static output in the dist folder.
+- The backend uses NODE_ENV=production for production-style logging.
+- The backend CORS setting uses CLIENT_URL.
+- After Netlify gives the final frontend URL, update the backend CLIENT_URL to that exact URL and redeploy the backend.

@@ -29,6 +29,8 @@ function unwrap(promise) {
 export const api = {
   register: (payload) => unwrap(client.post('/auth/register', payload)),
   login: (payload) => unwrap(client.post('/auth/login', payload)),
+  forgotPassword: (payload) => unwrap(client.post('/auth/forgot-password', payload)),
+  resetPassword: (payload) => unwrap(client.post('/auth/reset-password', payload)),
   me: () => unwrap(client.get('/auth/me')),
   fetchCurrentUser: () => unwrap(client.get('/auth/me')),
   updateCurrentUser: (payload) => unwrap(client.patch('/users/me', payload)),

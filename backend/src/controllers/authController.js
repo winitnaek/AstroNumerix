@@ -1,12 +1,29 @@
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { calculateAstrologyProfile } = require('../engine/astrologyEngine');
-const { isEmail, isIsoDate, isLatitude, isLongitude, isTime, missingFields } = require('../utils/validators');
+const { hasValidEmailDomain, isEmail, isIsoDate, isLatitude, isLongitude, isTime, missingFields } = require('../utils/validators');
+
+const PASSWORD_RESET_MINUTES = 15;
+const PASSWORD_RESET_MESSAGE = 'If an account exists for that email, password reset instructions have been sent.';
 
 function signToken(userId) {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d'
   });
+}
+
+function hashResetToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+function buildResetUrl(token) {
+  const clientUrl = process.env.CLIENT_URL || 'http://localhost:8080';
+  return `${clientUrl.replace(/\/$/, '')}/reset-password/${token}`;
+}
+
+function canReturnLocalResetLink() {
+  return process.env.NODE_ENV !== 'production';
 }
 
 function toPublicUser(user) {
@@ -61,6 +78,10 @@ async function register(req, res, next) {
       return res.status(400).json({ message: 'Please enter a valid email address' });
     }
 
+    if (!(await hasValidEmailDomain(email))) {
+      return res.status(400).json({ message: 'Please enter a real email address with a valid mail domain' });
+    }
+
     if (String(password).length < 8) {
       return res.status(400).json({ message: 'Password must be at least 8 characters' });
     }
@@ -113,6 +134,14 @@ async function login(req, res, next) {
       return res.status(400).json({ message: `Missing fields: ${missing.join(', ')}` });
     }
 
+    if (!isEmail(req.body.email)) {
+      return res.status(400).json({ message: 'Please enter a valid email address' });
+    }
+
+    if (!(await hasValidEmailDomain(req.body.email))) {
+      return res.status(400).json({ message: 'Please enter a real email address with a valid mail domain' });
+    }
+
     const user = await User.findOne({ email: String(req.body.email).toLowerCase() }).select('+password');
 
     if (!user || !(await user.comparePassword(req.body.password))) {
@@ -128,8 +157,78 @@ async function login(req, res, next) {
   }
 }
 
+async function forgotPassword(req, res, next) {
+  try {
+    const missing = missingFields(req.body, ['email']);
+    if (missing.length) {
+      return res.status(400).json({ message: `Missing fields: ${missing.join(', ')}` });
+    }
+
+    if (!isEmail(req.body.email)) {
+      return res.status(400).json({ message: 'Please enter a valid email address' });
+    }
+
+    if (!canReturnLocalResetLink()) {
+      return res.status(503).json({ message: 'Password reset email delivery is not configured yet' });
+    }
+
+    const user = await User.findOne({ email: String(req.body.email).toLowerCase() });
+    const response = { message: PASSWORD_RESET_MESSAGE };
+
+    if (!user) {
+      return res.json(response);
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    user.passwordResetToken = hashResetToken(resetToken);
+    user.passwordResetExpires = new Date(Date.now() + PASSWORD_RESET_MINUTES * 60 * 1000);
+    await user.save({ validateBeforeSave: false });
+
+    const resetUrl = buildResetUrl(resetToken);
+
+    if (canReturnLocalResetLink()) {
+      response.resetUrl = resetUrl;
+    }
+
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function resetPassword(req, res, next) {
+  try {
+    const missing = missingFields(req.body, ['token', 'password']);
+    if (missing.length) {
+      return res.status(400).json({ message: `Missing fields: ${missing.join(', ')}` });
+    }
+
+    if (String(req.body.password).length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters' });
+    }
+
+    const user = await User.findOne({
+      passwordResetToken: hashResetToken(req.body.token),
+      passwordResetExpires: { $gt: new Date() }
+    }).select('+passwordResetToken +passwordResetExpires');
+
+    if (!user) {
+      return res.status(400).json({ message: 'Password reset link is invalid or has expired' });
+    }
+
+    user.password = req.body.password;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+
+    res.json({ message: 'Password has been reset. You can now sign in.' });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function me(req, res) {
   res.json({ user: toPublicUser(req.user) });
 }
 
-module.exports = { login, me, register };
+module.exports = { forgotPassword, login, me, register, resetPassword };

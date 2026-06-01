@@ -33,9 +33,9 @@ export default function LoginPage() {
   return (
     <>
       <h2>Welcome back</h2>
-      <p className="text-muted mb-4">Sign in to continue to your numerology dashboard.</p>
+      <p className="text-muted mb-4">Sign in to continue to your AstroNumerix dashboard.</p>
       <AlertMessage message={error} />
-      <Form onSubmit={handleSubmit}>
+      <Form className="auth-login-form" onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Email</Label>
           <Input name="email" type="email" value={form.email} onChange={updateField} required />
@@ -44,13 +44,14 @@ export default function LoginPage() {
           <Label>Password</Label>
           <Input name="password" type="password" value={form.password} onChange={updateField} required />
         </FormGroup>
-        <Button color="primary" className="w-100" disabled={isSubmitting}>
-          {isSubmitting ? 'Signing in...' : 'Sign in'}
+        <Button color="primary" className="w-100 auth-enter-btn" disabled={isSubmitting}>
+          {isSubmitting ? 'Signing in...' : 'Enter Dashboard'}
         </Button>
       </Form>
-      <p className="auth-switch">
-        New here? <Link to="/register">Create an account</Link>
-      </p>
+      <div className="auth-login-links">
+        <Link to="/forgot-password">Forgot password?</Link>
+        <Link to="/register">Create new account</Link>
+      </div>
     </>
   );
 }

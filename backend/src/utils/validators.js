@@ -1,5 +1,45 @@
+const dns = require('dns').promises;
+
+const blockedEmailDomains = new Set([
+  'example.com',
+  'example.net',
+  'example.org',
+  'localhost',
+  'test.com',
+  'test.net',
+  'test.org'
+]);
+
 function isEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).toLowerCase());
+}
+
+function getEmailDomain(value) {
+  return String(value).trim().toLowerCase().split('@')[1] || '';
+}
+
+async function hasValidEmailDomain(value) {
+  const domain = getEmailDomain(value);
+
+  if (!domain || blockedEmailDomains.has(domain)) {
+    return false;
+  }
+
+  try {
+    const mxRecords = await dns.resolveMx(domain);
+    if (mxRecords.length > 0) {
+      return true;
+    }
+  } catch (error) {
+    // Fall back to A/AAAA records below. Some valid domains accept mail on the root host.
+  }
+
+  try {
+    const addresses = await dns.resolve(domain);
+    return addresses.length > 0;
+  } catch (error) {
+    return false;
+  }
 }
 
 function isIsoDate(value) {
@@ -30,6 +70,7 @@ function missingFields(body, fields) {
 }
 
 module.exports = {
+  hasValidEmailDomain,
   isEmail,
   isIsoDate,
   isLatitude,

@@ -8,12 +8,17 @@ const filters = [
   { value: 'profile', label: 'Profile' },
   { value: 'forecast', label: 'Forecast' },
   { value: 'compatibility', label: 'Compatibility' },
-  { value: 'loshu', label: 'Lo Shu' }
+  { value: 'loshu', label: 'Lo Shu' },
+  { value: 'cleanTrade', label: 'Clean Trade' }
 ];
 
 function titleCase(value) {
   if (value === 'loshu') {
     return 'Lo Shu';
+  }
+
+  if (value === 'cleanTrade') {
+    return 'Clean Trade';
   }
 
   return String(value || '').charAt(0).toUpperCase() + String(value || '').slice(1);
@@ -49,6 +54,15 @@ function inputSummary(item) {
     return input.dob ? `DOB ${input.dob}` : '';
   }
 
+  if (item.type === 'cleanTrade') {
+    return [
+      input.asset,
+      input.targetDate && `Date ${input.targetDate}`,
+      input.location,
+      input.ascendant && `Ascendant ${input.ascendant}`
+    ].filter(Boolean).join(' | ');
+  }
+
   return 'Saved calculation';
 }
 
@@ -71,6 +85,14 @@ function resultSummary(item) {
     const missing = result.missingNumbers?.length ? result.missingNumbers.join(', ') : 'none';
     const repeated = result.repeatedNumbers?.length ? result.repeatedNumbers.join(', ') : 'none';
     return `Missing ${missing} | Repeated ${repeated}`;
+  }
+
+  if (item.type === 'cleanTrade') {
+    return [
+      result.summary?.bestBuyWindow && `Buy ${result.summary.bestBuyWindow}`,
+      result.summary?.bestExitWindow && `Exit ${result.summary.bestExitWindow}`,
+      result.summary?.highestRiskWindow && `Risk ${result.summary.highestRiskWindow}`
+    ].filter(Boolean).join(' | ') || 'Clean Trade analysis saved';
   }
 
   return 'Result saved';
@@ -186,7 +208,7 @@ export default function HistoryPage() {
           <CardBody>
             <h4>No calculations found</h4>
             <p className="text-muted mb-0">
-              {history.length ? 'No saved calculations match this filter.' : 'Run a profile, forecast, compatibility, or Lo Shu calculation to populate history.'}
+              {history.length ? 'No saved calculations match this filter.' : 'Run a profile, forecast, compatibility, Lo Shu, or Clean Trade calculation to populate history.'}
             </p>
           </CardBody>
         </Card>

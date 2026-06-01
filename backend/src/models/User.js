@@ -66,7 +66,7 @@ const calculationSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ['profile', 'forecast', 'compatibility', 'loshu'],
+      enum: ['profile', 'forecast', 'compatibility', 'loshu', 'cleanTrade'],
       required: true
     },
     input: mongoose.Schema.Types.Mixed,
@@ -99,6 +99,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Password is required'],
       minlength: 8,
+      select: false
+    },
+    passwordResetToken: {
+      type: String,
+      select: false
+    },
+    passwordResetExpires: {
+      type: Date,
       select: false
     },
     dateOfBirth: {

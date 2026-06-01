@@ -37,6 +37,22 @@ function getSavedAscendant(user) {
   return user?.astrologyProfile?.ascendant?.westernName || '';
 }
 
+async function saveCleanTradeCalculation(user, calculation) {
+  await user.constructor.updateOne(
+    { _id: user._id },
+    {
+      $push: {
+        lastCalculations: {
+          $each: [calculation],
+          $position: 0,
+          $slice: 10
+        }
+      }
+    },
+    { runValidators: true }
+  );
+}
+
 async function cleanAnalysis(req, res, next) {
   try {
     const targetDate = req.body.targetDate;
@@ -66,6 +82,19 @@ async function cleanAnalysis(req, res, next) {
       asset,
       ascendant
     });
+
+    if (req.body.saveHistory === true) {
+      await saveCleanTradeCalculation(req.user, {
+        type: 'cleanTrade',
+        input: {
+          targetDate,
+          location: req.body.location || 'Cumming, Georgia, USA',
+          asset,
+          ascendant
+        },
+        result: analysis
+      });
+    }
 
     res.json(analysis);
   } catch (error) {

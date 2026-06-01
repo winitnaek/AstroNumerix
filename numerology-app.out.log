@@ -1,0 +1,30 @@
+
+> numerology-app-web@1.0.0 start
+> webpack serve --mode development
+
+asset [1m[32massets/js/main.65b424512e9be29ebe51.js[39m[22m 4.42 MiB [1m[32m[emitted][39m[22m [1m[32m[immutable][39m[22m (name: main)
+asset [1m[32mfavicon.svg[39m[22m 608 bytes [1m[32m[emitted][39m[22m
+asset [1m[32mindex.html[39m[22m 469 bytes [1m[32m[emitted][39m[22m
+orphan modules 976 KiB [1m[33m[orphan][39m[22m 311 modules
+runtime modules 28.3 KiB 15 modules
+modules by path [1m./node_modules/[39m[22m 3.22 MiB 533 modules
+modules by path [1m./src/[39m[22m 158 KiB 27 modules
+asset modules 5.03 KiB
+  [1mdata:image/svg+xml,%3csvg xmlns=%27..[39m[22m 281 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  [1mdata:image/svg+xml,%3csvg xmlns=%27..[39m[22m 281 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  [1mdata:image/svg+xml,%3csvg xmlns=%27..[39m[22m 279 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  [1mdata:image/svg+xml,%3csvg xmlns=%27..[39m[22m 161 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  [1mdata:image/svg+xml,%3csvg xmlns=%27..[39m[22m 271 bytes [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  + 14 modules
+webpack 5.106.2 compiled [1m[32msuccessfully[39m[22m in 3188 ms
+assets by info 4.45 MiB [1m[32m[immutable][39m[22m
+  asset [1m[32massets/js/main.53dd493f0da208d06d55.js[39m[22m 4.42 MiB [1m[32m[emitted][39m[22m [1m[32m[immutable][39m[22m (name: main)
+  asset [1m[32mmain.d9b8bd525d087b2d30fb.hot-update.js[39m[22m 33.4 KiB [1m[32m[emitted][39m[22m [1m[32m[immutable][39m[22m [1m[32m[hmr][39m[22m (name: main)
+  asset [1m[32mmain.d9b8bd525d087b2d30fb.hot-update.json[39m[22m 28 bytes [1m[32m[emitted][39m[22m [1m[32m[immutable][39m[22m [1m[32m[hmr][39m[22m
+asset [1m[32mfavicon.svg[39m[22m 608 bytes [1m[32m[emitted][39m[22m
+asset [1m[32mindex.html[39m[22m 469 bytes [1m[32m[emitted][39m[22m
+Entrypoint [1mmain[39m[22m 4.45 MiB = [1m[32massets/js/main.53dd493f0da208d06d55.js[39m[22m 4.42 MiB [1m[32mmain.d9b8bd525d087b2d30fb.hot-update.js[39m[22m 33.4 KiB
+cached modules 4.3 MiB [1m[32m[cached][39m[22m 889 modules
+runtime modules 28.3 KiB 15 modules
+./node_modules/css-loader/dist/cjs.js![1m./src/styles/app.css[39m[22m 29.3 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+webpack 5.106.2 compiled [1m[32msuccessfully[39m[22m in 226 ms

@@ -5,6 +5,8 @@ import AppLayout from './components/AppLayout';
 import AuthLayout from './components/AuthLayout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import CalculatorPage from './pages/CalculatorPage';
 import ForecastPage from './pages/ForecastPage';
@@ -61,6 +63,22 @@ export default function App() {
               element={
                 <PublicOnlyRoute>
                   <RegisterPage />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <PublicOnlyRoute>
+                  <ForgotPasswordPage />
+                </PublicOnlyRoute>
+              }
+            />
+            <Route
+              path="/reset-password/:token"
+              element={
+                <PublicOnlyRoute>
+                  <ResetPasswordPage />
                 </PublicOnlyRoute>
               }
             />
