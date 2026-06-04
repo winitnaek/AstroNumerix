@@ -41,6 +41,41 @@ a {
   justify-content: center;
 }
 
+.session-timeout-alert {
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+  padding: 14px 18px;
+}
+
+.session-timeout-alert-content {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.session-timeout-alert-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+}
+
+.session-timeout-alert-subtext {
+  color: var(--app-muted);
+  font-size: 0.9rem;
+}
+
+.session-timeout-alert-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .auth-page {
   background:
     radial-gradient(circle at 84% 10%, rgba(20, 184, 166, 0.24), transparent 26rem),

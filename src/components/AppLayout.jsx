@@ -9,6 +9,7 @@ import {
   NavbarToggler
 } from 'reactstrap';
 import { useAuth } from '../utils/AuthContext';
+import SessionTimeoutAlert from './SessionTimeoutAlert';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard' },
@@ -79,6 +80,7 @@ export default function AppLayout() {
         </Navbar>
 
         <Container fluid className="content-container">
+          <SessionTimeoutAlert />
           <Outlet />
         </Container>
       </div>
