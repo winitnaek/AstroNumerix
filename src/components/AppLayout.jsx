@@ -14,6 +14,7 @@ import SessionTimeoutAlert from './SessionTimeoutAlert';
 const navItems = [
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/clean-trade', label: 'Clean Trade' },
+  { to: '/stock-outlook', label: 'Stock Outlook' },
   { to: '/calculator', label: 'Calculator' },
   { to: '/forecast', label: 'Forecast' },
   { to: '/compatibility', label: 'Compatibility' },

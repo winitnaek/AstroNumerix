@@ -1198,6 +1198,11 @@ a {
   color: #9a3412;
 }
 
+.history-type-stockOutlook {
+  background: #ecfeff;
+  color: #0e7490;
+}
+
 .history-summary {
   display: grid;
   gap: 4px;
@@ -1286,6 +1291,149 @@ a {
 
 .trade-row-sell td {
   background: #fff1f2;
+}
+
+.stock-outlook-header .card-body {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.stock-outlook-header h3 {
+  font-size: 24px;
+  font-weight: 850;
+  margin: 0 0 4px;
+}
+
+.stock-outlook-header small {
+  color: var(--app-muted);
+  font-weight: 700;
+}
+
+.compact-summary {
+  gap: 10px;
+}
+
+.compact-summary div {
+  padding-bottom: 10px;
+}
+
+.stock-zone-list,
+.stock-strategy-list {
+  display: grid;
+  gap: 10px;
+}
+
+.stock-zone {
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+}
+
+.stock-zone span {
+  color: var(--app-muted);
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.stock-zone strong {
+  color: var(--app-text);
+  font-size: 16px;
+}
+
+.stock-zone-buy {
+  background: #ecfdf5;
+  border-left: 4px solid var(--app-green);
+}
+
+.stock-zone-hold {
+  background: #fefce8;
+  border-left: 4px solid #ca8a04;
+}
+
+.stock-zone-trim {
+  background: #fff1f2;
+  border-left: 4px solid var(--app-rose);
+}
+
+.stock-strategy-list div {
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 12px;
+}
+
+.stock-strategy-list span {
+  color: #334155;
+  font-weight: 700;
+}
+
+.stock-action-table td:first-child {
+  font-weight: 700;
+}
+
+.stock-action-row.stock-buy td {
+  background: #ecfdf5;
+}
+
+.stock-action-row.stock-hold td {
+  background: #fefce8;
+}
+
+.stock-action-row.stock-trim td {
+  background: #fff1f2;
+}
+
+.stock-verdict-card {
+  border-left-width: 4px;
+}
+
+.stock-verdict-card .card-body {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.stock-verdict-card span {
+  color: var(--app-muted);
+  display: block;
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.stock-verdict-card strong {
+  display: block;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.stock-verdict-card p {
+  color: #334155;
+  font-weight: 700;
+  margin: 0;
+  text-align: right;
+}
+
+.stock-verdict-card.stock-buy {
+  border-left-color: var(--app-green);
+}
+
+.stock-verdict-card.stock-hold {
+  border-left-color: #ca8a04;
+}
+
+.stock-verdict-card.stock-trim {
+  border-left-color: var(--app-rose);
 }
 
 .soft-tag.day {
@@ -1682,6 +1830,21 @@ a {
 
   .page-header h1 {
     font-size: 24px;
+  }
+
+  .stock-outlook-header .card-body,
+  .stock-verdict-card .card-body {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .stock-verdict-card p {
+    text-align: left;
+  }
+
+  .stock-strategy-list div {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .stat-value {

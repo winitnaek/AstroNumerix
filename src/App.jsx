@@ -15,6 +15,7 @@ import LoShuGrid from './pages/LoShuGrid';
 import ProfilePage from './pages/ProfilePage';
 import HistoryPage from './pages/HistoryPage';
 import CleanTrade from './pages/CleanTrade';
+import StockOutlook from './pages/StockOutlook';
 
 function ProtectedRoute({ children }) {
   const { token, isBooting } = useAuth();
@@ -97,6 +98,7 @@ export default function App() {
             <Route path="/compatibility" element={<CompatibilityPage />} />
             <Route path="/loshu" element={<LoShuGrid />} />
             <Route path="/clean-trade" element={<CleanTrade />} />
+            <Route path="/stock-outlook" element={<StockOutlook />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/history" element={<HistoryPage />} />
           </Route>

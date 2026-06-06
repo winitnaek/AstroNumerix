@@ -66,7 +66,7 @@ const calculationSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ['profile', 'forecast', 'compatibility', 'loshu', 'cleanTrade'],
+      enum: ['profile', 'forecast', 'compatibility', 'loshu', 'cleanTrade', 'stockOutlook'],
       required: true
     },
     input: mongoose.Schema.Types.Mixed,

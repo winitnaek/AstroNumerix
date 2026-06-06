@@ -9,7 +9,8 @@ const filters = [
   { value: 'forecast', label: 'Forecast' },
   { value: 'compatibility', label: 'Compatibility' },
   { value: 'loshu', label: 'Lo Shu' },
-  { value: 'cleanTrade', label: 'Clean Trade' }
+  { value: 'cleanTrade', label: 'Clean Trade' },
+  { value: 'stockOutlook', label: 'Stock Outlook' }
 ];
 
 function titleCase(value) {
@@ -19,6 +20,10 @@ function titleCase(value) {
 
   if (value === 'cleanTrade') {
     return 'Clean Trade';
+  }
+
+  if (value === 'stockOutlook') {
+    return 'Stock Outlook';
   }
 
   return String(value || '').charAt(0).toUpperCase() + String(value || '').slice(1);
@@ -63,6 +68,14 @@ function inputSummary(item) {
     ].filter(Boolean).join(' | ');
   }
 
+  if (item.type === 'stockOutlook') {
+    return [
+      input.asset,
+      input.targetPeriod,
+      input.currentDate && `Date ${input.currentDate}`
+    ].filter(Boolean).join(' | ');
+  }
+
   return 'Saved calculation';
 }
 
@@ -93,6 +106,15 @@ function resultSummary(item) {
       result.summary?.bestExitWindow && `Exit ${result.summary.bestExitWindow}`,
       result.summary?.highestRiskWindow && `Risk ${result.summary.highestRiskWindow}`
     ].filter(Boolean).join(' | ') || 'Clean Trade analysis saved';
+  }
+
+  if (item.type === 'stockOutlook') {
+    return [
+      result.snapshot?.price && `Price ${result.snapshot.price}`,
+      result.snapshot?.sentiment,
+      result.verdict?.rating && `Rating ${result.verdict.rating}`,
+      result.dataSource
+    ].filter(Boolean).join(' | ') || 'Stock Outlook saved';
   }
 
   return 'Result saved';
@@ -208,7 +230,7 @@ export default function HistoryPage() {
           <CardBody>
             <h4>No calculations found</h4>
             <p className="text-muted mb-0">
-              {history.length ? 'No saved calculations match this filter.' : 'Run a profile, forecast, compatibility, Lo Shu, or Clean Trade calculation to populate history.'}
+              {history.length ? 'No saved calculations match this filter.' : 'Run a profile, forecast, compatibility, Lo Shu, Clean Trade, or Stock Outlook calculation to populate history.'}
             </p>
           </CardBody>
         </Card>

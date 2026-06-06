@@ -41,5 +41,6 @@ export const api = {
   nameScore: (payload) => unwrap(client.post('/numerology/name-score', payload)),
   fetchCalculationHistory: () => unwrap(client.get('/numerology/history')),
   clearCalculationHistory: () => unwrap(client.delete('/numerology/history')),
-  cleanTradeAnalysis: (payload) => unwrap(client.post('/trade/clean-analysis', payload))
+  cleanTradeAnalysis: (payload) => unwrap(client.post('/trade/clean-analysis', payload)),
+  stockOutlook: (payload) => unwrap(client.post('/trade/stock-outlook', payload))
 };

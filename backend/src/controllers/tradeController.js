@@ -1,4 +1,5 @@
 const { analyzeCleanTrade } = require('../engine/cleanTradeEngine');
+const { buildStockOutlook } = require('../engine/stockOutlookEngine');
 const { isIsoDate } = require('../utils/validators');
 
 const ASCENDANTS = [
@@ -37,7 +38,7 @@ function getSavedAscendant(user) {
   return user?.astrologyProfile?.ascendant?.westernName || '';
 }
 
-async function saveCleanTradeCalculation(user, calculation) {
+async function saveTradeCalculation(user, calculation) {
   await user.constructor.updateOne(
     { _id: user._id },
     {
@@ -84,7 +85,7 @@ async function cleanAnalysis(req, res, next) {
     });
 
     if (req.body.saveHistory === true) {
-      await saveCleanTradeCalculation(req.user, {
+      await saveTradeCalculation(req.user, {
         type: 'cleanTrade',
         input: {
           targetDate,
@@ -102,4 +103,42 @@ async function cleanAnalysis(req, res, next) {
   }
 }
 
-module.exports = { cleanAnalysis };
+async function stockOutlook(req, res, next) {
+  try {
+    const asset = normalizeAsset(req.body.asset);
+
+    if (!asset) {
+      return res.status(400).json({ message: 'asset is required' });
+    }
+
+    if (!/^[A-Z][A-Z0-9.-]{0,9}$/.test(asset)) {
+      return res.status(400).json({ message: 'asset must be a valid symbol' });
+    }
+
+    const outlook = await buildStockOutlook(asset, {
+      allowFallback: req.body.allowFallback !== false
+    });
+
+    if (req.body.saveHistory === true) {
+      await saveTradeCalculation(req.user, {
+        type: 'stockOutlook',
+        input: {
+          asset,
+          targetPeriod: outlook.targetPeriod,
+          currentDate: outlook.currentDate
+        },
+        result: outlook
+      });
+    }
+
+    res.json(outlook);
+  } catch (error) {
+    if (error.statusCode) {
+      res.status(error.statusCode);
+    }
+
+    next(error);
+  }
+}
+
+module.exports = { cleanAnalysis, stockOutlook };
